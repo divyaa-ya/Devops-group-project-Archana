@@ -1,28 +1,29 @@
+
 import os
 from pymongo import MongoClient
 from dotenv import load_dotenv
 
-# Load variables from .env
 load_dotenv()
 
-# Get MongoDB connection string
 MONGODB_URI = os.getenv("MONGODB_URI")
 
-if not MONGODB_URI:
-    raise RuntimeError("MONGODB_URI is not set in the .env file")
+client = None
+db = None
+plant_scans_collection = None
 
-# Connect to MongoDB Atlas
-client = MongoClient(MONGODB_URI)
-
-# Select database
-db = client["crop_health_db"]
-
-# Select collection
-plant_scans_collection = db["plant_scans"]
+if MONGODB_URI:
+    try:
+        client = MongoClient(MONGODB_URI, serverSelectionTimeoutMS=3000)
+        db = client["crop_health_db"]
+        plant_scans_collection = db["plant_scans"]
+    except Exception as e:
+        print(f"MongoDB setup notice: {e}")
 
 
 def test_database_connection():
-    """Test whether MongoDB Atlas is reachable."""
+    if client is None:
+        return False
+
     try:
         client.admin.command("ping")
         return True

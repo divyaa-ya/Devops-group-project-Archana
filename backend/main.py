@@ -179,9 +179,11 @@ async def predict_crop_disease(file: UploadFile = File(...)):
             "prediction": prediction_result
         }
 
-        insert_result = plant_scans_collection.insert_one(
-            scan_record
-        )
+        scan_id = None
+
+        if plant_scans_collection is not None:
+            insert_result = plant_scans_collection.insert_one(scan_record)
+            scan_id = str(insert_result.inserted_id)
 
         # ----------------------------------------------------
         # Return prediction to frontend
@@ -189,7 +191,7 @@ async def predict_crop_disease(file: UploadFile = File(...)):
 
         return {
             "success": True,
-            "scan_id": str(insert_result.inserted_id),
+            "scan_id": scan_id,
             "filename": file.filename,
             "data": prediction_result
         }
