@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://fruit-doctor-ai-backend.onrender.com/api/:path*"
+      "destination": "https://crop-health-api-g08m.onrender.com/api/:path*"
     },
     {
       "source": "/(.*)",
